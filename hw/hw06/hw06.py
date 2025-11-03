@@ -189,8 +189,13 @@ def deep_map_mut(func, s: Link) -> None:
     >>> print(link2)
     (2 ((4 6)) 8)
     """
-    "*** YOUR CODE HERE ***"
-
+    if s is Link.empty:
+        return
+    elif isinstance(s.first, Link):
+        deep_map_mut(func, s.first)
+    else:
+        s.first = func(s.first)
+    deep_map_mut(func, s.rest)
 
 def prune_small(t, n):
     """Prune the tree mutatively, keeping only the n branches
@@ -209,11 +214,13 @@ def prune_small(t, n):
     >>> t3
     Tree(6, [Tree(1), Tree(3, [Tree(1), Tree(2)])])
     """
-    while ____:
-        largest = max(____, key=____)
-        ____
+    if t.is_leaf():
+        return
+    while len(t.branches) > n:
+        largest = max([b for b in t.branches], key=lambda b: b.label)
+        t.branches = [b for b in t.branches if b != largest]
     for b in t.branches:
-        ____
+        prune_small(b, n)
 
 
 def delete(t, x):
@@ -236,13 +243,13 @@ def delete(t, x):
     Tree(1, [Tree(4), Tree(5), Tree(3, [Tree(6)]), Tree(6), Tree(7), Tree(8), Tree(4)])
     """
     new_branches = []
-    for _________ in ________________:
-        _______________________
+    for b in t.branches:
+        delete(b, x)
         if b.label == x:
-            __________________________________
+            new_branches.extend(b.branches)
         else:
-            __________________________________
-    t.branches = ___________________
+            new_branches.append(b)
+    t.branches = new_branches
 
 
 def two_list(vals, counts):
