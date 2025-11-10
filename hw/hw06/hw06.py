@@ -270,7 +270,13 @@ def two_list(vals, counts):
     >>> c
     Link(1, Link(1, Link(3, Link(3, Link(2)))))
     """
-    "*** YOUR CODE HERE ***"
+    def helper(count, index):
+        if count == 0:
+            if index + 1 == len(vals):
+                return Link.empty
+            return Link(vals[index+1], helper(counts[index+1] - 1, index + 1))
+        return Link(vals[index], helper(count-1, index))
+    return helper(counts[0], 0)
 
 
 class Tree:
@@ -351,4 +357,5 @@ class Link:
             string += str(self.first) + ' '
             self = self.rest
         return string + str(self.first) + ')'
+
 
