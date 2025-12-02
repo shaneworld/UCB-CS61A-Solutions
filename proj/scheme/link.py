@@ -1,44 +1,6 @@
-def print_evals(expr):
-        """Print the expressions that are evaluated while evaluating expr.
-
-        expr: a Scheme expression containing only (, ), +, *, and numbers.
-
-        >>> nested_expr = Link('+', Link(Link('*', Link(3, Link(4, nil))), Link(5, nil)))
-        >>> print_evals(nested_expr)
-        (+ (* 3 4) 5)
-        +
-        (* 3 4)
-        *
-        3
-        4
-        5
-        >>> print_evals(Link('*', Link(6, Link(7, Link(nested_expr, Link(8, nil))))))
-        (* 6 7 (+ (* 3 4) 5) 8)
-        *
-        6
-        7
-        (+ (* 3 4) 5)
-        +
-        (* 3 4)
-        *
-        3
-        4
-        5
-        8
-        """
-        print(expr)
-
-        if not isinstance(expr, Link):   # number
-            print(expr)
-        else:
-            print(expr.first)            # operator (+ or *)
-            rest = expr.rest
-            while rest is not nil:    # evaluate each operand
-                print_evals(rest.first)
-                rest = rest.rest
-
 class Link:
     """A linked list.
+
     >>> s = Link(1)
     >>> s.first
     1
@@ -87,6 +49,12 @@ class Link:
             s += ' . ' + repl_str(rest)
         return s + ')'
 
+    def __eq__(self, other):
+        """Check structural equality between two Links."""
+        if not isinstance(other, Link):
+            return False
+        return self.first == other.first and self.rest == other.rest
+
 nil = Link.empty
 
 def repl_str(val):
@@ -103,6 +71,7 @@ def repl_str(val):
 
 def len_link(s):
     """Return the length of a linked list.
+
     >>> len_link(Link(1, Link(2, Link(3))))
     3
     >>> len_link(Link.empty)
@@ -115,6 +84,7 @@ def len_link(s):
 
 def map_link(f, s):
     """Map function f over linked list s.
+
     >>> square = lambda x: x * x
     >>> map_link(square, Link(1, Link(2, Link(3))))
     Link(1, Link(4, Link(9)))
@@ -123,9 +93,3 @@ def map_link(f, s):
         return s
     return Link(f(s.first), map_link(f, s.rest))
 
-
-
-
-nested_expr = Link('+', Link(Link('*', Link(3, Link(4, nil))), Link(5, nil)))
-print_evals(nested_expr)
-print_evals(Link('*', Link(6, Link(7, Link(nested_expr, Link(8, nil))))))
