@@ -44,7 +44,11 @@ def do_define_form(expressions, env):
     elif isinstance(signature, Link) and scheme_symbolp(signature.first):
         # defining a named procedure e.g. (define (f x y) (+ x y))
         # BEGIN PROBLEM 10
-        pass
+        formals = signature.rest
+        lambda_exp = Link(formals, expressions.rest)
+        lambda_proceudre = do_lambda_form(lambda_exp, env)
+        env.define(signature.first, lambda_proceudre)
+        return signature.first
         # END PROBLEM 10
     else:
         bad_signature = signature.first if isinstance(signature, Link) else signature
@@ -119,7 +123,17 @@ def do_and_form(expressions, env):
     False
     """
     # BEGIN PROBLEM 12
-    "*** YOUR CODE HERE ***"
+    curr, rs = expressions, None
+    if expressions is nil:
+        return True
+    while curr is not nil:
+        val = scheme_eval(curr.first, env)
+        if is_scheme_false(val):
+            return False
+        else:
+            rs = val
+        curr = curr.rest
+    return rs
     # END PROBLEM 12
 
 def do_or_form(expressions, env):
@@ -137,7 +151,13 @@ def do_or_form(expressions, env):
     6
     """
     # BEGIN PROBLEM 12
-    "*** YOUR CODE HERE ***"
+    curr = expressions
+    while curr is not nil:
+        val = scheme_eval(curr.first, env)
+        if is_scheme_true(val):
+            return val
+        curr = curr.rest
+    return False
     # END PROBLEM 12
 
 def do_cond_form(expressions, env):
@@ -223,7 +243,8 @@ def do_mu_form(expressions, env):
     formals = expressions.first
     validate_formals(formals)
     # BEGIN PROBLEM 11
-    "*** YOUR CODE HERE ***"
+    body = expressions.rest
+    return MuProcedure(formals, body)
     # END PROBLEM 11
 
 

@@ -68,12 +68,13 @@ def scheme_apply(procedure, args, env):
         # BEGIN PROBLEM 9
         formals = procedure.formals
         body = procedure.body
-        child_env = env.make_child_frame(formals, args)
-        return scheme_eval(body, child_env)
+        child_env = procedure.env.make_child_frame(formals, args)
+        return eval_all(body, child_env)
         # END PROBLEM 9
     elif isinstance(procedure, MuProcedure):
         # BEGIN PROBLEM 11
-        "*** YOUR CODE HERE ***"
+        new_env = env.make_child_frame(procedure.formals, args)
+        return eval_all(procedure.body, new_env)
         # END PROBLEM 11
     else:
         assert False, "Unexpected procedure: {}".format(procedure)
